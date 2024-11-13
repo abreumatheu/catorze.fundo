@@ -368,6 +368,27 @@
     border-radius: 50%;
 }
 
+/* Estilos para a animação de adição ao carrinho */
+@keyframes fly-to-cart {
+    0% {
+        opacity: 1;
+        transform: scale(1) translate(0, 0);
+    }
+    100% {
+        opacity: 0.5;
+        transform: scale(0.1) translate(300px, 500px); /* Ajuste a direção da animação conforme necessário */
+    }
+}
+
+.flying-item {
+    position: absolute;
+    width: 100px; /* Ajuste para o tamanho desejado do item animado */
+    z-index: 1000;
+    transition: transform 0.75s ease, opacity 0.75s ease;
+}
+
+
+
 
   </style>
 </head>
@@ -654,7 +675,6 @@ function showNotification(message) {
     }, 3000); // 3000 milissegundos = 3 segundos
 }
 
-// Modifique a função addToCart para chamar a notificação personalizada
 function addToCart(product) {
     const size = selectedSizes[product];
     if (!size) {
@@ -665,8 +685,42 @@ function addToCart(product) {
     const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
     cart.push({ product, size, price });
 
-    // Chama a função showNotification em vez de alert
+    // Exibir a notificação
     showNotification(product + ' (' + size + ') adicionado ao carrinho!');
+
+    // Seleciona a imagem do produto específico clicado
+    const productCard = document.querySelector(`[data-product="${product}"]`);
+    const productImage = productCard.querySelector("img");
+
+    // Clona a imagem do produto
+    const flyingImage = productImage.cloneNode(true);
+    flyingImage.classList.add("flying-item");
+    flyingImage.style.position = "absolute";
+    flyingImage.style.width = "100px"; // Tamanho desejado para a animação
+
+    // Posição inicial da imagem clonada
+    const productImageRect = productImage.getBoundingClientRect();
+    flyingImage.style.top = `${productImageRect.top + window.scrollY}px`;
+    flyingImage.style.left = `${productImageRect.left + window.scrollX}px`;
+    document.body.appendChild(flyingImage);
+
+    // Define a posição final do ícone do carrinho
+    const cartIcon = document.querySelector(".floating-pre-order-btn");
+    const cartIconRect = cartIcon.getBoundingClientRect();
+    const targetX = cartIconRect.left + window.scrollX;
+    const targetY = cartIconRect.top + window.scrollY;
+
+    // Calcula a transformação para mover a imagem até o carrinho
+    const translateX = targetX - (productImageRect.left + window.scrollX);
+    const translateY = targetY - (productImageRect.top + window.scrollY);
+    flyingImage.style.transition = "transform 1.5s ease, opacity 1.5s ease";
+    flyingImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.1)`;
+    flyingImage.style.opacity = "0.5";
+
+    // Remove a imagem da tela após a animação
+    flyingImage.addEventListener("transitionend", () => {
+        flyingImage.remove();
+    });
 }
 
 

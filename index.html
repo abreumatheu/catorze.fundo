@@ -338,6 +338,37 @@
       margin: 20px 0; /* Espaçamento acima e abaixo do logo */
     }
 
+    /* Estilos para a notificação */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1001;
+}
+
+.notification.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+
   </style>
 </head>
 <body>
@@ -500,11 +531,11 @@
     }
 
     function addToCart(product) {
-      const size = selectedSizes[product];
-      if (!size) {
-        alert("Por favor, selecione um tamanho para " + product);
-        return;
-      }
+  const size = selectedSizes[product];
+  if (!size) {
+    alert("Por favor, selecione um tamanho para " + product);
+    return;
+  }
 
       const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
       cart.push({ product, size, price });
@@ -606,7 +637,45 @@
       slider.setAttribute('data-current-slide', currentSlide);
     }
     
+    // Função para exibir a notificação personalizada
+function showNotification(message) {
+    const notification = document.getElementById("notification");
+    const notificationText = document.getElementById("notification-text");
+    
+    // Define o texto da notificação
+    notificationText.textContent = message;
+    
+    // Adiciona a classe para mostrar a notificação
+    notification.classList.add("show");
+    
+    // Define o tempo que a notificação ficará visível (por exemplo, 3 segundos)
+    setTimeout(() => {
+        notification.classList.remove("show");
+    }, 3000); // 3000 milissegundos = 3 segundos
+}
+
+// Modifique a função addToCart para chamar a notificação personalizada
+function addToCart(product) {
+    const size = selectedSizes[product];
+    if (!size) {
+        alert("Por favor, selecione um tamanho para " + product);
+        return;
+    }
+
+    const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
+    cart.push({ product, size, price });
+
+    // Chama a função showNotification em vez de alert
+    showNotification(product + ' (' + size + ') adicionado ao carrinho!');
+}
+
+
   </script>
+
+<div id="notification" class="notification">
+  <img src="logo.jpg" alt="Logo da CatorzeOrquídeas" class="notification-logo">
+  <span id="notification-text"></span>
+</div>
 
 </body>
 </html>

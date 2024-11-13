@@ -685,39 +685,40 @@ function addToCart(product) {
     const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
     cart.push({ product, size, price });
 
-    // Exibir a notificação
-   // showNotification(product + ' (' + size + ') adicionado ao carrinho!');
-
-    // Seleciona a imagem do produto específico clicado
+    // Identifica a imagem atualmente visível do produto clicado
     const productCard = document.querySelector(`[data-product="${product}"]`);
-    const productImage = productCard.querySelector("img");
+    const sliderImages = productCard.querySelector(".slider-images");
+    const visibleImageIndex = parseInt(sliderImages.getAttribute('data-current-slide')) || 0;
+    const visibleImage = sliderImages.children[visibleImageIndex];
 
-    // Clona a imagem do produto
-    const flyingImage = productImage.cloneNode(true);
+    // Clona a imagem visível do produto
+    const flyingImage = visibleImage.cloneNode(true);
     flyingImage.classList.add("flying-item");
-    flyingImage.style.position = "absolute";
-    flyingImage.style.width = "100px"; // Tamanho desejado para a animação
 
-    // Posição inicial da imagem clonada
-    const productImageRect = productImage.getBoundingClientRect();
-    flyingImage.style.top = `${productImageRect.top + window.scrollY}px`;
-    flyingImage.style.left = `${productImageRect.left + window.scrollX}px`;
+    // Adiciona a imagem clonada ao body para animação
     document.body.appendChild(flyingImage);
 
-    // Define a posição final do ícone do carrinho
+    // Define a posição inicial da imagem clonada usando as coordenadas da imagem visível
+    const productImageRect = visibleImage.getBoundingClientRect();
+    flyingImage.style.position = "absolute";
+    flyingImage.style.top = `${productImageRect.top + window.scrollY}px`;
+    flyingImage.style.left = `${productImageRect.left + window.scrollX}px`;
+    flyingImage.style.width = "100px"; // Ajusta o tamanho para a animação
+
+    // Define a posição final para o ícone do carrinho
     const cartIcon = document.querySelector(".floating-pre-order-btn");
     const cartIconRect = cartIcon.getBoundingClientRect();
     const targetX = cartIconRect.left + window.scrollX;
     const targetY = cartIconRect.top + window.scrollY;
 
-    // Calcula a transformação para mover a imagem até o carrinho
+    // Anima a imagem clonada para o ícone do carrinho
+    flyingImage.style.transition = "transform 1.5s ease, opacity 1.5s ease";
     const translateX = targetX - (productImageRect.left + window.scrollX);
     const translateY = targetY - (productImageRect.top + window.scrollY);
-    flyingImage.style.transition = "transform 1.5s ease, opacity 1.5s ease";
     flyingImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.1)`;
     flyingImage.style.opacity = "0.5";
 
-    // Remove a imagem da tela após a animação
+    // Remove a imagem clonada após a animação
     flyingImage.addEventListener("transitionend", () => {
         flyingImage.remove();
     });

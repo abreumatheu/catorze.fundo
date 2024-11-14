@@ -387,8 +387,58 @@
     transition: transform 0.75s ease, opacity 0.75s ease;
 }
 
+ /* Estilo do balão de notificação */
+ .cart-bubble {
+      position: absolute;
+      top: -35px; /* Para o balão ficar mais acima do carrinho */
+      right: -10px;
+      background-color: #fff; /* Contraste com fundo preto */
+      color: #1c1c1c;
+      padding: 8px 12px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra para destaque */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(10px); /* Animação de entrada sutil */
+    }
 
+    .cart-bubble.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0); /* Transição suave ao aparecer */
+    }
 
+    /* Botão flutuante do carrinho */
+    .floating-pre-order-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ffa500;
+      color: #1c1c1c;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+
+    .floating-pre-order-btn:hover {
+      background-color: #ff8700;
+    }
+
+    .footer-text {
+    color: black;
+  }
 
   </style>
 </head>
@@ -503,10 +553,11 @@
 
   </div>
 
-    <!-- Botão Flutuante de Pré-Venda -->
-    <button class="floating-pre-order-btn" onclick="openCartModal()">
-        <i class="fas fa-shopping-cart"></i>
-      </button>
+    <!-- Botão Flutuante de Pré-Venda com balão de notificação -->
+  <button class="floating-pre-order-btn" onclick="openCartModal()">
+      <i class="fas fa-shopping-cart"></i>
+      <div id="cartBubble" class="cart-bubble">Ver carrinho</div>
+  </button>
 
   <!-- Botão WhatsApp -->
   <button class="whatsapp-btn" onclick="openWhatsApp()">
@@ -560,6 +611,9 @@
 
       const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
       cart.push({ product, size, price });
+      // Exibe o balão de notificação
+      showCartBubble();
+    
       alert(product + ' (' + size + ') adicionado ao carrinho!');
     }
 
@@ -685,6 +739,9 @@ function addToCart(product) {
     const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
     cart.push({ product, size, price });
 
+     // Exibe o balão de notificação
+     showCartBubble();
+
     // Identifica a imagem atualmente visível do produto clicado
     const productCard = document.querySelector(`[data-product="${product}"]`);
     const sliderImages = productCard.querySelector(".slider-images");
@@ -724,6 +781,15 @@ function addToCart(product) {
     });
 }
 
+function showCartBubble() {
+      const cartBubble = document.getElementById("cartBubble");
+      cartBubble.classList.add("show");
+
+      // Esconde o balão após 3 segundos
+      setTimeout(() => {
+        cartBubble.classList.remove("show");
+      }, 3000);
+    }
 
   </script>
 

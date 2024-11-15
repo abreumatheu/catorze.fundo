@@ -440,6 +440,123 @@
     color: black;
   }
 
+   /* Botão de Fechar */
+   .close-btn {
+    background-color: #ccc;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #1c1c1c;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+
+  .close-btn:hover {
+    background-color: #bbb;
+  }
+
+  /* Botão de Finalizar Compra */
+  .finalize-btn {
+    background-color: #ffa500;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: #1c1c1c;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.5);
+    animation: pulse 2s infinite ease-in-out;
+    transition: transform 0.2s;
+  }
+
+  .finalize-btn:hover {
+    transform: scale(1.1);
+    background-color: #ff8700;
+  }
+
+  /* Animação de Pulso */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 4px 10px rgba(255, 165, 0, 0.5);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 6px 14px rgba(255, 165, 0, 0.7);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 4px 10px rgba(255, 165, 0, 0.5);
+    }
+  }
+
+   /* Estilo do balão de mensagem */
+   .size-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    color: #1c1c1c;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    display: none;
+    z-index: 1001;
+  }
+
+  /* Efeito de tremor */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+  }
+
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  /* Estilo do balão de mensagem */
+.size-warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #1c1c1c;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  display: none; /* Inicialmente oculto */
+  z-index: 1001;
+  animation: fadeInOut 3s ease;
+}
+
+/* Animação suave de entrada e saída */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+}
+</style>
+
   </style>
 </head>
 <body>
@@ -569,16 +686,15 @@
     <i class="fab fa-instagram"></i>
   </button>
 
-  <!-- Modal do Carrinho -->
   <div id="cartModal" class="modal">
     <div class="modal-content">
       <h2>Itens no Carrinho</h2>
       <div id="cartItems"></div>
       <p id="cartTotal" style="margin-top: 10px; font-weight: bold;">Total: R$0,00</p>
-      <button class="close-btn" onclick="closeCartModal()">Fechar</button>
-      <button class="close-btn" onclick="sendPreOrder()">Finalizar Compra</button>
+      <button class="close-btn" onclick="closeCartModal()">Voltar</button>
+      <button class="finalize-btn" onclick="sendPreOrder()">Finalizar Compra</button>
     </div>
-</div>
+  </div>
 
   <footer style="text-align: center; display: flex; flex-direction: column; align-items: center;">
     <img src="logo.jpg" alt="Logo da CatorzeOrquídeas" class="footer-logo">
@@ -745,11 +861,11 @@ function showNotification(message) {
 }
 
 function addToCart(product) {
-    const size = selectedSizes[product];
-    if (!size) {
-        alert("Por favor, selecione um tamanho para " + product);
-        return;
-    }
+  const size = selectedSizes[product];
+  if (!size) {
+    showSizeWarning(); // Exibe o balão de aviso
+    return;
+  }
 
     const price = ["XGG", "G1", "G2", "G3"].includes(size) ? 87 : 80;
     cart.push({ product, size, price });
@@ -806,6 +922,19 @@ function showCartBubble() {
       }, 3000);
     }
 
+    function showSizeWarning() {
+  const sizeWarning = document.getElementById("sizeWarning");
+
+  // Mostra o balão
+  sizeWarning.style.display = "block";
+
+  // Esconde o balão automaticamente após 3 segundos
+  setTimeout(() => {
+    sizeWarning.style.display = "none";
+  }, 3000);
+}
+
+
   </script>
 
 <div id="notification" class="notification">
@@ -813,5 +942,8 @@ function showCartBubble() {
   <span id="notification-text"></span>
 </div>
 
+<!-- Balão de aviso -->
+<div id="sizeWarning" class="size-warning">Opsss.. selecione um tamanho antes 😉 </div>
+  
 </body>
 </html>

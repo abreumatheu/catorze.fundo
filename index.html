@@ -574,10 +574,11 @@
     <div class="modal-content">
       <h2>Itens no Carrinho</h2>
       <div id="cartItems"></div>
+      <p id="cartTotal" style="margin-top: 10px; font-weight: bold;">Total: R$0,00</p>
       <button class="close-btn" onclick="closeCartModal()">Fechar</button>
-      <button class="close-btn" onclick="sendPreOrder()">Realizar Pré-Venda</button>
+      <button class="close-btn" onclick="sendPreOrder()">Finalizar Compra</button>
     </div>
-  </div>
+</div>
 
   <footer style="text-align: center; display: flex; flex-direction: column; align-items: center;">
     <img src="logo.jpg" alt="Logo da CatorzeOrquídeas" class="footer-logo">
@@ -613,8 +614,15 @@
       cart.push({ product, size, price });
       // Exibe o balão de notificação
       showCartBubble();
+      updateCartTotal();
+
     
       alert(product + ' (' + size + ') adicionado ao carrinho!');
+    }
+
+    function updateCartTotal() {
+    const total = cart.reduce((acc, item) => acc + item.price, 0);
+    document.getElementById("cartTotal").textContent = `Total: R$${total.toFixed(2)}`;
     }
 
     function openCartModal() {
@@ -633,7 +641,8 @@
         });
       }
       cartModal.style.display = "flex";
-    }
+    updateCartTotal(); // Atualiza o valor total ao abrir o modal
+}
 
     function closeCartModal() {
       document.getElementById("cartModal").style.display = "none";
@@ -645,11 +654,17 @@
         return;
       }
 
-      const message = cart.map(item => `${item.product} (${item.size}): R$${item.price}`).join('\n');
-      const whatsappLink = `https://wa.me/5511958731426?text=${encodeURIComponent(message)}`;
-      window.open(whatsappLink, '_blank');
-      closeCartModal();
-    }
+      const total = cart.reduce((acc, item) => acc + item.price, 0);
+    const message = `
+    Olá, tudo bem? Gostaria de realizar a compra na pré-venda, das seguintes camisetas:
+    ${cart.map(item => `- ${item.product} (Tamanho: ${item.size}): R$${item.price.toFixed(2)}`).join('\n')}
+    
+    Total: R$${total.toFixed(2)}
+    `;
+    const whatsappLink = `https://wa.me/5511958731426?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+    closeCartModal();
+}
 
     function openWhatsApp() {
       const whatsappLink = `https://wa.me/5511958731426`;

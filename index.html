@@ -555,6 +555,44 @@
     transform: translate(-50%, -40%);
   }
 }
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 8px;
+}
+
+.cart-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.cart-item .remove-btn {
+  background-color: #ff5f6d;
+  color: #fff;
+  border: none;
+  border-radius: 50%; /* Deixa o botão redondo */
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 50px;
+  height: 50px; /* Altura do botão */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  margin-left: auto;
+}
+
+.cart-item .remove-btn:hover {
+  transform: scale(1.2); /* Efeito de zoom ao passar o mouse */
+  background-color: #ff3b4f; /* Cor ao passar o mouse */
+}
 </style>
 
   </style>
@@ -718,6 +756,12 @@
       sizeButtons.forEach(btn => btn.classList.remove('selected'));
       buttonElement.classList.add('selected');
     }
+    
+    const productImages = {
+  "Quebra Mar": "quebra.frente.jpeg",
+  "Paulo Beto": "paulo.frente.jpeg",
+  "Dentre os grandes, és o primeiro": "grande.frente.jpeg"
+};
 
     function addToCart(product) {
   const size = selectedSizes[product];
@@ -742,23 +786,55 @@
     }
 
     function openCartModal() {
-      const cartModal = document.getElementById("cartModal");
-      const cartItemsDiv = document.getElementById("cartItems");
+  const cartModal = document.getElementById("cartModal");
+  const cartItemsDiv = document.getElementById("cartItems");
 
-      cartItemsDiv.innerHTML = '';
-      if (cart.length === 0) {
-        cartItemsDiv.innerHTML = "<p>O carrinho está vazio.</p>";
-      } else {
-        cart.forEach(item => {
-          const itemElement = document.createElement("div");
-          itemElement.classList.add("cart-item");
-          itemElement.textContent = `${item.product} - Tamanho: ${item.size} - Preço: R$${item.price}`;
-          cartItemsDiv.appendChild(itemElement);
-        });
-      }
-      cartModal.style.display = "flex";
-    updateCartTotal(); // Atualiza o valor total ao abrir o modal
+  cartItemsDiv.innerHTML = '';
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = "<p>O carrinho está vazio.</p>";
+  } else {
+    cart.forEach(item => {
+      const itemContainer = document.createElement("div");
+      itemContainer.classList.add("cart-item");
+
+      // Adiciona a imagem do produto
+      const img = document.createElement("img");
+      img.src = productImages[item.product]; // Caminho direto para o arquivo
+      img.alt = item.product;
+      img.style.width = "50px";
+      img.style.height = "50px";
+      img.style.borderRadius = "8px";
+      img.style.marginRight = "10px";
+
+      // Adiciona o texto do item
+      const text = document.createElement("span");
+      text.textContent = `${item.product} - Tamanho: ${item.size} - Preço: R$${item.price}`;
+
+      // Adiciona o botão de remover
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "X";
+      removeBtn.style.marginLeft = "10px";
+      removeBtn.style.backgroundColor = "#ff5f6d";
+      removeBtn.style.color = "#fff";
+      removeBtn.style.border = "none";
+      removeBtn.style.borderRadius = "4px";
+      removeBtn.style.cursor = "pointer";
+      removeBtn.onclick = () => {
+        cart = cart.filter(cartItem => cartItem !== item);
+        openCartModal(); // Atualiza o modal do carrinho
+      };
+
+      // Monta o item do carrinho
+      itemContainer.appendChild(img);
+      itemContainer.appendChild(text);
+      itemContainer.appendChild(removeBtn);
+      cartItemsDiv.appendChild(itemContainer);
+    });
+  }
+  cartModal.style.display = "flex";
+  updateCartTotal(); // Atualiza o valor total ao abrir o modal
 }
+  
 
     function closeCartModal() {
       document.getElementById("cartModal").style.display = "none";
@@ -933,6 +1009,13 @@ function showCartBubble() {
     sizeWarning.style.display = "none";
   }, 3000);
 }
+
+function removeFromCart(index) {
+  cart.splice(index, 1); // Remove o item pelo índice
+  openCartModal(); // Reabre o modal para atualizar os itens
+  updateCartTotal(); // Atualiza o total
+}
+
 
 
   </script>

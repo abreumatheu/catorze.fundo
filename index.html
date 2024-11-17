@@ -63,10 +63,13 @@
 
     
     .product-section {
+      width: 100%;
+      max-width: 900px; /* Aumenta a largura total da seção */
+      margin-bottom: 30px;
       display: flex;
-      flex-direction: column; /* Exibição em coluna */
-      gap: 20px; /* Espaçamento entre os cards */
-      align-items: center; /* Centraliza os cards */
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
     }
 
     .product-card {
@@ -590,94 +593,11 @@
   transform: scale(1.2); /* Efeito de zoom ao passar o mouse */
   background-color: #ff3b4f; /* Cor ao passar o mouse */
 }
-
-/* Overlay para a demonstração */
-.demo-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Fundo translúcido */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000; /* Acima de outros elementos */
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.demo-overlay.show {
-  visibility: visible;
-  opacity: 1; /* Exibe o overlay */
-}
-
-/* Conteúdo de demonstração */
-.demo-content {
-  position: absolute;
-  bottom: 10%;
-  text-align: center;
-  color: #fff;
-  z-index: 2100;
-}
-
-.demo-text {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  animation: fadeInOut 2s infinite; /* Efeito de piscar */
-}
-
-.demo-arrow {
-  width: 40px;
-  height: 40px;
-  border: solid 4px transparent;
-  border-radius: 50%;
-  position: absolute;
-  animation: bounce 1.5s infinite ease-in-out;
-  border-top-color: transparent; /* Remove a borda superior */
-  border-bottom-color: #ffa500; /* Adiciona a borda inferior */
-}
-
-.demo-arrow-down {
-  top: 80%; /* Reposiciona para a parte inferior */
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg); /* Aponta para baixo */
-}
-
-
-/* Animação para piscar */
-@keyframes fadeInOut {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Animação de pular */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
 </style>
 
   </style>
 </head>
 <body>
-
-  <div id="demoOverlay" class="demo-overlay">
-    <div class="demo-content">
-      <p class="demo-text">Role para baixo para explorar! 👇</p>
-      <div class="demo-arrow demo-arrow-down"></div>
-    </div>
-  </div>
 
     <!-- Cabeçalho com logo centralizado -->
     <header>
@@ -694,7 +614,7 @@
 -->
 
   <!-- Seção dos Produtos -->
-  <div class="product-section" id="productSection">
+  <div class="product-section">
 
 <!-- Modelo 1 -->
 <div class="product-card" data-product="Quebra Mar">
@@ -1096,33 +1016,7 @@ function removeFromCart(index) {
   updateCartTotal(); // Atualiza o total
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const demoOverlay = document.getElementById('demoOverlay');
-  let scrollInterval;
 
-  demoOverlay.classList.add('show'); // Exibe o overlay
-
-  // Inicia a rolagem lenta
-  function startAutoScroll() {
-    scrollInterval = setInterval(() => {
-      window.scrollBy({ top: 1, behavior: 'smooth' });
-    }, 5); // Ajuste a velocidade da rolagem
-  }
-
-  startAutoScroll();
-
-  // Para a rolagem e fecha o overlay ao clicar
-  demoOverlay.addEventListener('click', () => {
-    clearInterval(scrollInterval); // Para a rolagem
-    demoOverlay.classList.remove('show'); // Remove o overlay
-  });
-
-  // Remove o overlay automaticamente após 10 segundos
-  setTimeout(() => {
-    clearInterval(scrollInterval); // Para a rolagem
-    demoOverlay.classList.remove('show'); // Remove o overlay
-  }, 10000);
-});
 
   </script>
 

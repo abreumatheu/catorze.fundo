@@ -16,15 +16,16 @@
 
     body {
       background-color: #1c1c1c;
-      background-image: url('fundo.jpeg'); /* Caminho da imagem de fundo */
-      background-size: contain; /* Tamanho da imagem para uma repetição agradável */
-      background-repeat: repeat; /* Repete a imagem ao longo do fundo */
+      background-image: url('fundo.jpeg');
+      background-size: contain;
+      background-repeat: repeat;
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow-x: hidden;
     }
 
     /* Cabeçalho com logo centralizado */
@@ -593,11 +594,117 @@
   transform: scale(1.2); /* Efeito de zoom ao passar o mouse */
   background-color: #ff3b4f; /* Cor ao passar o mouse */
 }
+
+ /* Animação de carregamento */
+ #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4); /* Fundo escuro transparente */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loadingOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #loadingIcon {
+      font-size: 2.5rem;
+      color: #ffa500;
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    /* Animação de pulso para o ícone */
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    /* Animação de rolagem */
+    html, body {
+      scroll-behavior: smooth;
+    }
+
+    /* Overlay de carregamento */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4); /* Fundo escuro semitransparente */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loadingOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #loadingLogo {
+      width: 150px;
+      height: auto;
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    /* Animação de pulso */
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    /* Animação de rolagem */
+    html, body {
+      scroll-behavior: smooth;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 300px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
 </style>
 
   </style>
 </head>
 <body>
+
+    <!-- Overlay de carregamento -->
+  <div id="loadingOverlay">
+    <img id="loadingLogo" src="logosemfundo.png.png" alt="Logo da CatorzeOrquídeas">
+  </div>
 
     <!-- Cabeçalho com logo centralizado -->
     <header>
@@ -1016,8 +1123,37 @@ function removeFromCart(index) {
   updateCartTotal(); // Atualiza o total
 }
 
+ // Função para iniciar no rodapé e subir para o início
+ function startAtBottom() {
+    // Aguarda a renderização completa da página antes de rolar
+    setTimeout(() => {
+      // Rola para o rodapé imediatamente
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "auto",
+      });
 
+      // Aguarda um pequeno tempo antes de rolar suavemente para o topo
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }, 500); // Delay para a transição suave
+    }, 100); // Delay inicial para garantir que o DOM foi carregado
+  }
 
+  // Controla a exibição do overlay de carregamento
+  function hideLoadingOverlay() {
+    const loadingOverlay = document.getElementById("loadingOverlay");
+    loadingOverlay.classList.add("hidden"); // Adiciona a classe para ocultar
+  }
+
+  // Garante que o evento seja executado ao carregar a página
+  window.onload = () => {
+    startAtBottom(); // Inicia no rodapé e sobe
+    setTimeout(hideLoadingOverlay, 2500); // Esconde o overlay após a animação
+  };
   </script>
 
 <div id="notification" class="notification">
